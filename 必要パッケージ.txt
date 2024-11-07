@@ -1,0 +1,10 @@
+必要パッケージ一覧
+
+Window->PackageManager->Packages:UnityRegistry
+・OculusXR Plugin
+・XR PluginManagement
+
+Window->PackageManager->Packages:In Project
+・Meta XR Core SDK
+・Meta XR Interaction SDK
+・Meta XR Interaction SDK Essentials
