@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 378998212935572387}
   - component: {fileID: 819967723816037890}
   - component: {fileID: 1262248715057572987}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: GrabSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}

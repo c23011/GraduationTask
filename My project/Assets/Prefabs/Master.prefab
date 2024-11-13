@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8813049634777475535}
-  - component: {fileID: 7691264938054160378}
+  - component: {fileID: 8088330494675336912}
   m_Layer: 0
   m_Name: Master
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7691264938054160378
+--- !u!114 &8088330494675336912
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,8 +41,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 9151934065320880171}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce35661aa8c1bce418ca08915e29a636, type: 3}
+  m_Script: {fileID: 11500000, guid: ba29109ddc338d648ac178896d01e9ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GrabCube: {fileID: 8785329337940961976, guid: ff6509b665ac82548b015032bcd62449, type: 3}
-  GrabSphere: {fileID: 365726838378460640, guid: fe1a1a2b3aea46f46b27aef1103ceaf9, type: 3}
+  GrabCube: {fileID: 8785329337940961976, guid: 7ac172f596181d2438b3afcb345973b4, type: 3}
+  GrabSphere: {fileID: 365726838378460640, guid: cd262c49ca8fc0840a986cf64be785ac, type: 3}
