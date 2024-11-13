@@ -10,9 +10,9 @@ public class ButtonManager : MonoBehaviour
     public class ButtonPressedEvent : UnityEvent { }
     public ButtonPressedEvent OnButtonPressed;
 
-    public Vector3 Axis = new Vector3(0, -1, 0);
+    public Vector3 Axis;
     public float MaxDistance;
-    public float ReturnSpeed = 10.0f;
+    public float ReturnSpeed;
 
     Vector3 m_StartPosition;
     Rigidbody m_Rigidbody;
@@ -39,6 +39,7 @@ public class ButtonManager : MonoBehaviour
         // スタート時点の位置からの現在までの移動量を測定（平方根）
         float m_CurrentDistance = (transform.position - m_StartPosition).magnitude;
         RaycastHit info;
+        Debug.DrawRay(this.transform.position, worldAxis, Color.yellow);
 
         float move = 0.0f;
 

@@ -11,8 +11,11 @@ namespace EnablingXR
         /// <summary>
         /// Initializes XR
         /// </summary>
+        
         public static IEnumerator EnableXRCoroutine()
         {
+            Debug.Log("iiiiiiiiiiiiiiii");
+
             // Make sure the XR is disabled and properly disposed. It can happen that there is an activeLoader left
             // from the previous run.
             if (XRGeneralSettings.Instance.Manager.activeLoader ||
@@ -55,23 +58,6 @@ namespace EnablingXR
 public class MultiCameraDisplay : MonoBehaviour
 {
     [SerializeField] Camera _thirdViewCamera;
-
-    //VRリセット用
-    //public void Awake()
-    //{
-    //    // Fix: Stop subsystems and deinitialize the loader if it's already active
-    //    if (XRGeneralSettings.Instance.Manager.activeLoader != null)
-    //    {
-    //        XRGeneralSettings.Instance.Manager.StopSubsystems();
-    //        XRGeneralSettings.Instance.Manager.DeinitializeLoader();
-    //    }
-
-    //    // Initialize and start the loader
-    //    XRGeneralSettings.Instance.Manager.InitializeLoaderSync();
-    //    XRGeneralSettings.Instance.Manager.StartSubsystems();
-    //}
-
-
 
     void Start()
     {
