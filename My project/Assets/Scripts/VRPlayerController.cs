@@ -6,7 +6,7 @@ public class VRPlayerController : MonoBehaviour
 {
     //VRのコントローラーの親オブジェクト
     [SerializeField] GameObject PlayerParent;
-    
+
     //CenterEyeAnchorが視点
     [SerializeField] GameObject HeadSet;
 
@@ -24,10 +24,10 @@ public class VRPlayerController : MonoBehaviour
     [SerializeField] float moveDirection;
 
     //振回数のカウント
-    [SerializeField] int  minShakeCount;
-    [SerializeField] int  nowShakeCount;
-    bool  LeftShakeCountSW;
-    bool  RightShakeCountSW;
+    [SerializeField] int minShakeCount;
+    [SerializeField] int nowShakeCount;
+    bool LeftShakeCountSW;
+    bool RightShakeCountSW;
 
     //移動スピード
     [SerializeField] float moveSpeed;
@@ -48,30 +48,32 @@ public class VRPlayerController : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     void Update()
     {
+        //腕を振る動作の基準座標を設定
         if (OVRInput.GetDown(OVRInput.RawButton.Start))
         {
             startHandPos = controllerLeftPosY;
             Debug.Log(startHandPos);
         }
 
-        controllerLeftPosY  = ControllerLeft.transform.position.y;
+        controllerLeftPosY = ControllerLeft.transform.position.y;
         controllerRightPosY = ControllerRight.transform.position.y;
 
         PlayerRot = HeadSet.transform.rotation;
 
-        this.transform.rotation = new Quaternion(PlayerParent.transform.rotation.x,PlayerRot.y, PlayerParent.transform.rotation.z, PlayerRot.w);
+        this.transform.rotation = new Quaternion(PlayerParent.transform.rotation.x, PlayerRot.y, PlayerParent.transform.rotation.z, PlayerRot.w);
         PlayerParent.transform.position = this.transform.position;
 
+        //左スティックの傾きを取得し移動に反映
         LeftStickVec = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick);
         if (LeftStickVec.y != 0.0f)
         {
             this.transform.position += transform.forward * (LeftStickVec.y * moveSpeed);
-            this.transform.position += transform.right   * (LeftStickVec.x * moveSpeed);
+            this.transform.position += transform.right * (LeftStickVec.x * moveSpeed);
         }
 
         LeftShake();
@@ -91,6 +93,8 @@ public class VRPlayerController : MonoBehaviour
             this.transform.position += transform.forward * moveSpeed;
         }
     }
+
+    //手が指定範囲内に出入りした時にカウントを増やして前側に動かす
 
     void LeftShake()
     {
