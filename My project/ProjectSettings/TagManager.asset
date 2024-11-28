@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Pickaxe
+  - LeftHand
+  - RightHand
+  - Hand
   layers:
   - Default
   - TransparentFX

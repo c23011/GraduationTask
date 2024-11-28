@@ -24,7 +24,6 @@ public class BreakObjScript : MonoBehaviour
             if (nowBreakTime <= maxBreakTime)
             {
                 nowBreakTime += Time.deltaTime;
-                Debug.Log(nowBreakTime);
             }
         }
 
