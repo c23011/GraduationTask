@@ -48,8 +48,6 @@ public class PickItemScript : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other);
-
         if (other.gameObject.tag == "LeftHand")
         {
             LeftHand = other.gameObject;
