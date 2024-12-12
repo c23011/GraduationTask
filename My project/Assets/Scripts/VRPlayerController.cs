@@ -68,7 +68,7 @@ public class VRPlayerController : MonoBehaviour
         PlayerParent.transform.position = this.transform.position;
 
         LeftStickVec = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick);
-        if (LeftStickVec.y != 0.0f)
+        if (LeftStickVec.y != 0.1f)
         {
             this.transform.position += transform.forward * (LeftStickVec.y * moveSpeed);
             this.transform.position += transform.right   * (LeftStickVec.x * moveSpeed);
