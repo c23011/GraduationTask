@@ -17,9 +17,9 @@ namespace MecanimIKPlus
 		[Range (0.0f, 1.0f)] public float rightHandPosWeight = 1.0f;
 		[Range (0.0f, 1.0f)] public float rightHandRotWeight = 1.0f;
 		[Range (0.0f, 1.0f)] public float leftFootPosWeight = 1.0f;
-		[Range (0.0f, 1.0f)] public float leftFootRotWeight = 1.0f;
-		[Range (0.0f, 1.0f)] public float rightFootPosWeight = 1.0f;
-		[Range (0.0f, 1.0f)] public float rightFootRotWeight = 1.0f;
+		[Range(0.0f, 1.0f)] public float leftFootRotWeight = 1.0f;
+		[Range(0.0f, 1.0f)] public float rightFootPosWeight = 1.0f;
+		[Range(0.0f, 1.0f)] public float rightFootRotWeight = 1.0f;
 
 		Animator animator;
 
@@ -34,10 +34,7 @@ namespace MecanimIKPlus
 			animator.SetIKRotationWeight (AvatarIKGoal.LeftHand, leftHandRotWeight);
 			animator.SetIKPositionWeight (AvatarIKGoal.RightHand, rightHandPosWeight);
 			animator.SetIKRotationWeight (AvatarIKGoal.RightHand, rightHandRotWeight);
-			animator.SetIKPositionWeight (AvatarIKGoal.LeftFoot, leftFootPosWeight);
-			animator.SetIKRotationWeight (AvatarIKGoal.LeftFoot, leftFootRotWeight);
-			animator.SetIKPositionWeight (AvatarIKGoal.RightFoot, rightFootPosWeight);
-			animator.SetIKRotationWeight (AvatarIKGoal.RightFoot, rightFootRotWeight);
+
 			if (bodyTarget != null) {
 				animator.bodyPosition = bodyTarget.position;
 				animator.bodyRotation = bodyTarget.rotation;
@@ -49,15 +46,21 @@ namespace MecanimIKPlus
 			if (rightHandTarget != null) {
 				animator.SetIKPosition (AvatarIKGoal.RightHand, rightHandTarget.position);
 				animator.SetIKRotation (AvatarIKGoal.RightHand, rightHandTarget.rotation);
-			}				
-			if (leftFootTarget != null) {
-				animator.SetIKPosition (AvatarIKGoal.LeftFoot, leftFootTarget.position);
-				animator.SetIKRotation (AvatarIKGoal.LeftFoot, leftFootTarget.rotation);
-			}				
-			if (rightFootTarget != null) {
-				animator.SetIKPosition (AvatarIKGoal.RightFoot, rightFootTarget.position);
-				animator.SetIKRotation (AvatarIKGoal.RightFoot, rightFootTarget.rotation);
-			}				
+			}
+			if (leftFootTarget != null)
+			{
+				animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, leftFootPosWeight);
+				animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, leftFootRotWeight);
+				animator.SetIKPosition(AvatarIKGoal.LeftFoot, leftFootTarget.position);
+				animator.SetIKRotation(AvatarIKGoal.LeftFoot, leftFootTarget.rotation);
+			}
+			if (rightFootTarget != null)
+			{
+				animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, rightFootPosWeight);
+				animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, rightFootRotWeight);
+				animator.SetIKPosition(AvatarIKGoal.RightFoot, rightFootTarget.position);
+				animator.SetIKRotation(AvatarIKGoal.RightFoot, rightFootTarget.rotation);
+			}
 		}
 
 	}

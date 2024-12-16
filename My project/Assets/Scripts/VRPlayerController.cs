@@ -46,6 +46,9 @@ public class VRPlayerController : MonoBehaviour
 
     Vector2 LeftStickVec;
 
+    //歩行アニメーション制御変数
+    public Animator PlayerAnim;
+
     void Start()
     {
         
@@ -67,12 +70,7 @@ public class VRPlayerController : MonoBehaviour
         this.transform.rotation = new Quaternion(PlayerParent.transform.rotation.x,PlayerRot.y, PlayerParent.transform.rotation.z, PlayerRot.w);
         PlayerParent.transform.position = this.transform.position;
 
-        LeftStickVec = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick);
-        if (LeftStickVec.y != 0.1f)
-        {
-            this.transform.position += transform.forward * (LeftStickVec.y * moveSpeed);
-            this.transform.position += transform.right   * (LeftStickVec.x * moveSpeed);
-        }
+        StickMove();
 
         LeftShake();
         RightShake();
@@ -173,6 +171,48 @@ public class VRPlayerController : MonoBehaviour
         {
             nowShakeCount = 0;
             noMoveTimer = 0;
+        }
+    }
+
+    void StickMove()
+    {
+        LeftStickVec = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick);
+        if (LeftStickVec.y >= 0.1f)
+        {
+            Debug.Log("WalkFront");
+            this.transform.position += transform.forward * (LeftStickVec.y * moveSpeed);
+
+            PlayerAnim.SetBool("Walk", true);
+        }
+        
+        if (LeftStickVec.y <= -0.1f)
+        {
+            Debug.Log("WalkBack");
+            this.transform.position += transform.forward * (LeftStickVec.y * moveSpeed);
+
+            PlayerAnim.SetBool("Walk", true);
+        }
+        
+        if (LeftStickVec.x >= 0.1f)
+        {
+            Debug.Log("WalkRight");
+            this.transform.position += transform.right * (LeftStickVec.x * moveSpeed);
+
+            PlayerAnim.SetBool("Walk", true);
+        }
+
+        if (LeftStickVec.x <= -0.1f)
+        {
+            Debug.Log("WalkLeft");
+            this.transform.position += transform.right * (LeftStickVec.x * moveSpeed);
+
+            PlayerAnim.SetBool("Walk", true);
+        }
+
+        if (LeftStickVec.y >= -0.1f && LeftStickVec.y <= 0.1f && LeftStickVec.x >= -0.1f && LeftStickVec.x <= 0.1f)
+        {
+            Debug.Log("StopWalk");
+            PlayerAnim.SetBool("Walk", false);
         }
     }
 }
