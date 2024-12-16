@@ -87,6 +87,12 @@ public class VRPlayerController : MonoBehaviour
         if (MoveSW == true)
         {
             this.transform.position += transform.forward * moveSpeed;
+            PlayerAnim.SetBool("Walk", true);
+        }
+
+        if (MoveSW == false)
+        {
+            PlayerAnim.SetBool("Walk", false);
         }
     }
 

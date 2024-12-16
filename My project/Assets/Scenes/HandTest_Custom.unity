@@ -9480,12 +9480,12 @@ MonoBehaviour:
   ControllerRight: {fileID: 5570379196751445350}
   startHandPos: 0
   moveDirection: 0.1
-  minShakeCount: 2
+  minShakeCount: 3
   nowShakeCount: 0
-  moveSpeed: 0.05
+  moveSpeed: 0.005
   MoveSW: 0
   noMoveTimer: 0
-  minMoveTimer: 1
+  minMoveTimer: 0.85
   TimerResetSW: 0
   PlayerAnim: {fileID: 632918530}
 --- !u!4 &1948014604

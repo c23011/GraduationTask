@@ -49,16 +49,12 @@ namespace MecanimIKPlus
 			}
 			if (leftFootTarget != null)
 			{
-				animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, leftFootPosWeight);
-				animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, leftFootRotWeight);
-				animator.SetIKPosition(AvatarIKGoal.LeftFoot, leftFootTarget.position);
+				//animator.SetIKPosition(AvatarIKGoal.LeftFoot, leftFootTarget.position);
 				animator.SetIKRotation(AvatarIKGoal.LeftFoot, leftFootTarget.rotation);
 			}
 			if (rightFootTarget != null)
 			{
-				animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, rightFootPosWeight);
-				animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, rightFootRotWeight);
-				animator.SetIKPosition(AvatarIKGoal.RightFoot, rightFootTarget.position);
+				//animator.SetIKPosition(AvatarIKGoal.RightFoot, rightFootTarget.position);
 				animator.SetIKRotation(AvatarIKGoal.RightFoot, rightFootTarget.rotation);
 			}
 		}
