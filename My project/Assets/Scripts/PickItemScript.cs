@@ -14,14 +14,8 @@ public class PickItemScript : MonoBehaviour
     bool PickSW_L;
     bool PickSW_R;
 
-    void Start()
-    {
-        
-    }
-
     void Update()
     {
-        //this.transform.position = new Vector3(Player.transform.position.x, Player.transform.position.y -1.0f, Player.transform.position.z);
         if (PickSW_L == true)
         {
             if (Input.GetKey(KeyCode.JoystickButton4))
