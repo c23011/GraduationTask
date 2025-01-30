@@ -5,10 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/HandTest_Custom.unity
-    guid: c884d076d6398b54492bcc64bbe30bf5
+    guid: 6e1bf406ce9a29444b187bb4a0b3bd6e
+  - enabled: 1
+    path: Assets/Scenes/Map.unity
+    guid: 1001c277dcd37e842807d0f5e64a326c
   m_configObjects:
-    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 71faa068f92edf8409ebc94f49d6d8b5, type: 2}
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: b44f77237a21949479257f398c0acba4, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 11d0b8d9713025443aaad1d07c96bc49, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 728d26c6308f7d845af2b2a8c546853a, type: 2}

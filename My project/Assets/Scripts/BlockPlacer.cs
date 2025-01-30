@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BlockPlacer : MonoBehaviour
@@ -32,10 +34,10 @@ public class BlockPlacer : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             // ヒットした位置のグリッド上の座標を取得
-            Vector3 gridPosition = gridManager.GetNearestPointOnGrid(hit.point);
+            //Vector3 gridPosition = gridManager.GetNearestPointOnGrid(hit.point);
 
             // 選択中のブロックを配置
-            Instantiate(blockPrefabs[selectedBlockIndex], gridPosition, Quaternion.identity);
+            //Instantiate(blockPrefabs[selectedBlockIndex], gridPosition, Quaternion.identity);
         }
     }
 }

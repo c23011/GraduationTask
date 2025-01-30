@@ -1,21 +1,268 @@
-ï»¿using System.Collections.Generic;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    public int gridWidth = 10;   // ã‚°ãƒªãƒƒãƒ‰ã®å¹…
-    public int gridHeight = 10;  // ã‚°ãƒªãƒƒãƒ‰ã®é«˜ã•
-    public float cellSize = 1f;  // å„ãƒã‚¹ã®ã‚µã‚¤ã‚º
+    public GameObject cellPrefab;
+    public List<GameObject> mapPrefabs;
+    public int mapCounter;
+    public GameObject startPrefab;  // ƒXƒ^[ƒg’n“_
+    public GameObject goalPrefab;   // ƒS[ƒ‹’n“_
+    public GameObject player; // ƒvƒŒƒCƒ„[
+    public List<GameObject> randomMapPrefabs;
+    public List<GameObject> manualMapPrefabs;
+    public Camera mainCamera;
+    public float cameraHeight = 10f;
+    public float cameraMoveDuration = 1f;
+    public int gridSizeX = 5;
+    public int gridSizeY = 5;
+    public float spacing = 1.1f;
+    public float mapHeight = 0.5f;
 
-    // ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’ã‚°ãƒªãƒƒãƒ‰åº§æ¨™ã«å¤‰æ›
-    public Vector3 GetNearestPointOnGrid(Vector3 position)
+    private List<GameObject> cells = new List<GameObject>();
+    private HashSet<int> usedCells = new HashSet<int>();
+    private List<int> emptyCells = new List<int>();
+
+    private int selectedMapIndex = -1;
+    private int startCellIndex = -1;
+    private int goalCellIndex = -1;
+
+    private int playerCellIndex; // Œ»İ‚ÌƒvƒŒƒC
+
+    private int currentX = 0; // Œ»İ‚Ì‘I‘ğ’†‚Ìƒ}ƒX‚ÌXÀ•W
+    private int currentY = 0; // Œ»İ‚Ì‘I‘ğ’†‚Ìƒ}ƒX‚ÌYÀ•W
+
+    public GameObject[] InstMaps;
+    public int InstMapNum;
+    public Vector3 InstMapRot;
+    Vector3 StartPlayerPos;
+
+    void Start()
     {
-        int xCount = Mathf.RoundToInt(position.x / cellSize);
-        int zCount = Mathf.RoundToInt(position.z / cellSize);
+        GenerateGrid();
+        SetStartAndGoal();
+        PlaceRandomMaps(20); // ƒ‰ƒ“ƒ_ƒ€‚É3‚Â”z’u
+        FocusOnCell(currentX, currentY);
+    }   
 
-        float xPos = xCount * cellSize;
-        float zPos = zCount * cellSize;
+    void Update()
+    {
+        // ”šƒL[‚Åƒ}ƒbƒv‘I‘ğ
+        for (int i = 0; i < mapPrefabs.Count; i++)
+        {
+            if (Input.GetKeyDown((KeyCode)(KeyCode.Alpha1 + i)))
+            {
+                selectedMapIndex = i;
+                Debug.Log($"Selected Map: {mapPrefabs[selectedMapIndex].name}");
+            }
+        }
 
-        return new Vector3(xPos, 0, zPos);
+        // \šƒL[‚Åƒ}ƒXˆÚ“®
+        if (Input.GetKeyDown(KeyCode.UpArrow)) MoveSelection(0, -1);
+        if (Input.GetKeyDown(KeyCode.DownArrow)) MoveSelection(0, 1);
+        if (Input.GetKeyDown(KeyCode.LeftArrow)) MoveSelection(-1, 0);
+        if (Input.GetKeyDown(KeyCode.RightArrow)) MoveSelection(1, 0);
+
+        //¶ƒNƒŠƒbƒN‚ÅŒv‰ñ‚è‚É‰ñ“]
+        if (Input.GetMouseButtonDown(0))
+        {
+            InstMapRot = new Vector3(0, InstMapRot.y + 90.0f, 0);
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            InstMapRot = new Vector3(0, InstMapRot.y - 90.0f, 0);
+        }
+
+        // SpaceƒL[‚Åƒ}ƒbƒv‚ğ”z’u
+        if (Input.GetKeyDown(KeyCode.Space) && selectedMapIndex != -1)
+        {
+            PlaceMapAtCurrentCell();
+        }
+    }
+
+    void GenerateGrid()
+    {
+        for (int x = 0; x < gridSizeX; x++)
+        {
+            for (int y = 0; y < gridSizeY; y++)
+            {
+                // À•W‚ğŒvZ
+                Vector3 position = new Vector3(x * spacing, 0, y * spacing);
+
+                // Prefab‚ğ¶¬‚µAƒŠƒXƒg‚É’Ç‰Á
+                GameObject cell = Instantiate(cellPrefab, position, Quaternion.identity, transform);
+                cells.Add(cell); // ¶¬‚µ‚½ƒ}ƒX‚ğƒŠƒXƒg‚É’Ç‰Á
+                int a = 0;
+                GameObject cellObj;
+                cellObj = cells[a];
+                a += 1;
+                Debug.Log(cellObj);
+            }
+        }
+    }
+
+    void PlaceRandomMaps(int mapCount)
+    {
+        // ƒ‰ƒ“ƒ_ƒ€‚Åƒ}ƒX‚ğ‘I‚Ô
+        List<int> selectedIndices = new List<int>();
+        while (selectedIndices.Count < mapCount)
+        {
+            int randomIndex = Random.Range(0, cells.Count);
+            if (!usedCells.Contains(randomIndex))
+            {
+                if (!selectedIndices.Contains(randomIndex))
+                {
+                    selectedIndices.Add(randomIndex);
+                    usedCells.Add(randomIndex); // g—pÏ‚İ‚É’Ç‰Á
+                }
+            }
+        }
+
+        // ‘I‚Î‚ê‚½ƒ}ƒX‚Ìã‚Éƒ}ƒbƒv‚ğ”z’u
+        foreach (int index in selectedIndices)
+        {
+            //List“à‚Ìw’èÀ•W‚Ìcell‚ğ‘I‘ğ
+            GameObject selectedCell = cells[index];
+
+            // ƒ}ƒX‚Ì^ã‚Éƒ‰ƒ“ƒ_ƒ€‚Èƒ}ƒbƒvPrefab‚ğ”z’u
+            int randomMaps = Random.Range(0, mapCounter);
+            int randomRot = Random.Range(-1, 3);
+            Vector3 MapRot; InstMapNum = index;
+
+            if (mapPrefabs[randomMaps] != null)
+            {
+                Vector3 mapPosition = selectedCell.transform.position + Vector3.up * mapHeight;
+                InstMaps[InstMapNum] = Instantiate(mapPrefabs[randomMaps], mapPosition, Quaternion.identity, transform);
+
+                //¶¬‚µ‚½ƒ}ƒbƒv‚ğƒ‰ƒ“ƒ_ƒ€‚É90‹‚İ‚Å‰ñ“]
+                MapRot = new Vector3(0, randomRot * 90.0f, 0);
+
+                InstMaps[InstMapNum].transform.rotation = Quaternion.Euler(MapRot);
+            }
+        }
+    }
+
+    // \šƒL[‚Å‘I‘ğ’†‚Ìƒ}ƒX‚ğˆÚ“®
+    void MoveSelection(int deltaX, int deltaY)
+    {
+        currentX = Mathf.Clamp(currentX + deltaX, 0, gridSizeX - 1);
+        currentY = Mathf.Clamp(currentY + deltaY, 0, gridSizeY - 1);
+        FocusOnCell(currentX, currentY);
+    }
+
+    // Œ»İ‘I‘ğ’†‚Ìƒ}ƒX‚ÉƒtƒH[ƒJƒX
+    void FocusOnCell(int x, int y)
+    {
+        int cellIndex = y * gridSizeX + x; // 1ŸŒ³”z—ñ‚ÌƒCƒ“ƒfƒbƒNƒXŒvZ
+        GameObject cell = cells[cellIndex];
+
+        MoveCameraToCell(cell);
+
+        // ƒnƒCƒ‰ƒCƒg•\¦i—áFF‚ğ•ÏXj
+        //foreach (var c in cells) c.GetComponent<Renderer>().material.color = Color.white; // ƒfƒtƒHƒ‹ƒgF
+        //cell.GetComponent<Renderer>().material.color = Color.yellow; // ‘I‘ğ’†‚Ìƒ}ƒX‚ğƒnƒCƒ‰ƒCƒg
+    }
+
+    // Œ»İ‚Ì‘I‘ğ’†‚Ìƒ}ƒX‚Éƒ}ƒbƒv‚ğ”z’u
+    void PlaceMapAtCurrentCell()
+    {
+        int cellIndex = currentY * gridSizeX + currentX; // Œ»İ‚ÌƒCƒ“ƒfƒbƒNƒX‚ğŒvZ
+
+        GameObject cell = cells[cellIndex];
+        GameObject mapPrefab = mapPrefabs[selectedMapIndex];
+        InstMapNum = cellIndex;
+
+        if (InstMaps[InstMapNum] != null)
+        {
+            Destroy(InstMaps[InstMapNum]);
+            Debug.Log(InstMapNum);
+        }
+
+        if (usedCells.Contains(cellIndex))
+        {
+            usedCells.Remove(cellIndex);
+        }
+
+        PlaceMapOnCell(cell, mapPrefab);
+
+        usedCells.Add(cellIndex); // g—pÏ‚İ‚É’Ç‰Á
+    }
+
+    // ƒJƒƒ‰ˆÚ“®
+    void MoveCameraToCell(GameObject cell)
+    {
+        Vector3 targetPosition = cell.transform.position + Vector3.up * cameraHeight;
+        StartCoroutine(SmoothCameraMove(targetPosition));
+    }
+
+    // ƒJƒƒ‰ˆÚ“®ƒAƒjƒ[ƒVƒ‡ƒ“
+    System.Collections.IEnumerator SmoothCameraMove(Vector3 targetPosition)
+    {
+        Vector3 startPosition = mainCamera.transform.position;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < cameraMoveDuration)
+        {
+            mainCamera.transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / cameraMoveDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        mainCamera.transform.position = targetPosition;
+    }
+
+    // ƒZƒ‹‚Ìã‚Éƒ}ƒbƒv‚ğ”z’u
+    void PlaceMapOnCell(GameObject cell, GameObject mapPrefab)
+    {
+        Vector3 mapPosition = cell.transform.position + Vector3.up * mapHeight;
+        InstMaps[InstMapNum] = Instantiate(mapPrefab, mapPosition, Quaternion.Euler(InstMapRot), cell.transform);
+    }
+
+    void SetStartAndGoal()
+    {
+        List<int> availableCells = new List<int>();
+        for (int i = 0; i < cells.Count; i++)
+        {
+            if (!usedCells.Contains(i))
+            {
+                availableCells.Add(i);
+            }
+        }
+
+        if (availableCells.Count < 2)
+        {
+            Debug.LogError("‹ó‚«ƒ}ƒX‚ª‘«‚è‚Ü‚¹‚ñI");
+            return;
+        }
+
+        // ƒ‰ƒ“ƒ_ƒ€‚ÉƒXƒ^[ƒg‚ÆƒS[ƒ‹‚ğŒˆ’è
+        startCellIndex = availableCells[Random.Range(0, availableCells.Count)];
+        usedCells.Remove(startCellIndex);
+        goalCellIndex = availableCells[Random.Range(0, availableCells.Count)];
+        usedCells.Remove(goalCellIndex);
+
+        // ƒXƒ^[ƒg’n“_‚ğ”z’u
+        Instantiate(startPrefab, cells[startCellIndex].transform.position + Vector3.up * mapHeight, Quaternion.identity);
+        usedCells.Add(startCellIndex);
+
+        // ƒS[ƒ‹’n“_‚ğ”z’u
+        Instantiate(goalPrefab, cells[goalCellIndex].transform.position + Vector3.up * mapHeight, Quaternion.identity);
+        usedCells.Add(goalCellIndex);
+
+        SpawnPlayer();
+    }
+
+    // ƒvƒŒƒCƒ„[‚ğƒXƒ|[ƒ“
+    void SpawnPlayer()
+    {
+        if (startCellIndex == -1) return;
+        StartPlayerPos = cells[startCellIndex].transform.position + Vector3.up * mapHeight;
+        StartPlayerPos.y = 0.2f;
+        player.transform.position = StartPlayerPos;
+        playerCellIndex = startCellIndex;
     }
 }
+
+
